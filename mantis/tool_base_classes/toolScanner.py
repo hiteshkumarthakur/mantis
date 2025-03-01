@@ -1,3 +1,4 @@
+from mantis.utils.base_request import BaseRequestExecutor
 from mantis.utils.common_utils import CommonUtils
 from subprocess import Popen, PIPE, DEVNULL
 from mantis.models.args_model import ArgsModel
@@ -5,6 +6,8 @@ import logging
 import sys
 import time
 import asyncio
+import os
+import requests
 
 class ToolScanner:
     
@@ -35,8 +38,34 @@ class ToolScanner:
             command_list.append((self, command, outfile, every_asset))
         self.commands_list = command_list
         return command_list
-    
-    
+
+    def download_required_file(self):
+        # Define the download directory
+        download_dir = "config/resources/"
+        os.makedirs(download_dir, exist_ok=True)
+
+        # Define URLs and corresponding filenames
+        files = {
+            "https://raw.githubusercontent.com/trickest/resolvers/main/resolvers.txt": "resolvers.txt",    # https://github.com/trickest
+            "https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt": "best-dns-wordlist.txt"  #https://www.assetnote.io/
+        }
+
+        for url, filename in files.items():
+            file_path = os.path.join(download_dir, filename)
+
+            try:
+                print(f"Downloading {filename}...")
+                # _, response = BaseRequestExecutor.sendRequest("GET", url)
+                response = requests.get(url, stream=True)
+                response.raise_for_status()
+
+                with open(file_path, "wb") as file:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        file.write(chunk)
+                print(f"Downloaded {filename} successfully.")
+            except BaseRequestExecutor as e:
+                print(f"Failed to download {filename}: {e}")
+
     def parse_report(self, outfile):
         raise NotImplementedError
     
