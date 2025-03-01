@@ -6,7 +6,7 @@ from mantis.utils.tool_utils import get_assets_grouped_by_type
 from mantis.constants import ASSET_TYPE_TLD
 
 '''
-Subfinder module enumerates subdomain of the TLDs which are fetched from database. 
+puredns is a fast domain resolver and subdomain bruteforcing tool that can accurately filter out wildcard subdomains and DNS poisoned entries.
 Output file: .txt separated by new line. 
 Each subdomain discovered is inserted into the database as a new asset. 
 '''
