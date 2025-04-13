@@ -17,7 +17,7 @@ workflow:
         tools: ['Subfinder','Go_Virustotal','Go_Wayback','Puredns']
         order: 1
       - moduleName: prerecon
-        tools: ['FindCDN', 'Naabu']
+        tools: ['FindCDN', 'Naabu','Katana','Gau_JS']
         order: 2
       - moduleName: activehostscan
         tools: ['HTTPX_Active', 'HTTPX']
@@ -130,7 +130,7 @@ notify:
 
 
 dbConfig:
-  mongoConnectionString: 'mongodb://mantis.db:27017'
+  mongoConnectionString: 'mongodb://localhost:27017'
 
 secretscanner:
   # org       : This will perform scan at the org level (https://api.github.com/orgs/{org}/repos?page=)

@@ -27,6 +27,7 @@ class Assets(BaseModel):
     stale: Optional[bool] = False
     repositories: Optional[str] = Field(None)
     tool_source: Optional[str] = Field(None)
+    js_assets: Optional[str] = Field(None)
     others: Optional[dict] = dict()
 
 
