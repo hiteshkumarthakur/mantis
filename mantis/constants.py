@@ -17,3 +17,7 @@ DNS_TWISTER_FUZZER_ORIGINAL  = "*original"
 HIGH_SEVERITY = "HIGH"
 
 FINDING_TYPE_PHISHING = "phishing"
+
+JS_ASSET_TYPE = "js_assets"
+
+TMP_FOLDER = "/tmp/"
