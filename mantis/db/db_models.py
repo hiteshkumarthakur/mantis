@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Literal, Optional
+from typing import Literal, Optional, Dict, List
 
 
 class Assets(BaseModel):
@@ -27,7 +27,7 @@ class Assets(BaseModel):
     stale: Optional[bool] = False
     repositories: Optional[str] = Field(None)
     tool_source: Optional[str] = Field(None)
-    js_assets: Optional[str] = Field(None)
+    js_assets: Optional[list] = Field(default_factory=list)
     others: Optional[dict] = dict()
 
 

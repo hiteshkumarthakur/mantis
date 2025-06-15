@@ -3,8 +3,10 @@ import os
 import re
 import logging
 from mantis.utils.crud_utils import CrudUtils
+from urllib.parse import urlparse
 from mantis.config_parsers.config_client import ConfigProvider
 class SecretFinder:
+
 
     def __init__(self, domain, args, path):
         self.domain = domain
@@ -117,6 +119,35 @@ class SecretFinder:
 
         if len(finding_dict_list):
             await CrudUtils.insert_findings(self, finding_dict["host"], finding_dict_list, self.finding_type)
+        else:
+            logging.info('No secrets found')
+        logging.info("Findings inserted in db")
+        return True
+
+    async def find_secrets_in_js(self,asset):
+        secrets = self.report_data
+        if secrets == []:
+            return None
+
+        finding_dict_list = []
+        self.finding_type = "secret"
+        for secret in secrets:
+            finding_dict = {}
+            finding_dict["host"] = self.args.org
+            finding_dict["url"] = asset
+            finding_dict["title"] = f"JShastra"
+            finding_dict["org"] = self.args.org
+            finding_dict["type"] = "secret"
+            finding_dict["info"] = {}
+            finding_dict["info"]["key"] = secret['Secret']
+            finding_dict["info"]["Match"] = secret['Match']
+            finding_dict["info"]["RuleID"] = secret['RuleID']
+            finding_dict["info"]["Entropy"] = secret['Entropy']
+            finding_dict_list.append(finding_dict)
+
+        if len(finding_dict_list):
+            # asset = self.extract_hostname(asset)
+            await CrudUtils.insert_findings(self,asset, finding_dict_list, self.finding_type)
         else:
             logging.info('No secrets found')
         logging.info("Findings inserted in db")

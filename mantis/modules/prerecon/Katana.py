@@ -3,6 +3,7 @@ from mantis.utils.common_utils import CommonUtils
 from mantis.utils.crud_utils import CrudUtils
 from mantis.tool_base_classes.toolScanner import ToolScanner
 from mantis.models.args_model import ArgsModel
+from mantis import constants
 from mantis.utils.tool_utils import get_assets_grouped_by_type, get_assets_with_non_empty_fields, \
     get_assets_with_empty_fields
 import json
@@ -15,16 +16,10 @@ class Katana(ToolScanner):
 
     async def get_commands(self, args: ArgsModel):
         self.org = args.org
-        self.base_command = 'katana -u {input_domain} d 5 -jc -jsl -kf robotstxt,sitemapxml -hl -em js,xml && status_code = 200 -o {output_file_path}'
+        self.base_command = "katana -u {input_domain} -kf robotstxt,sitemapxml | grep '.js$' > {output_file_path}"
+        # self.base_command = 'katana -u {input_domain} -d 5 -jc -jsl -kf robotstxt,sitemapxml -hl -o {output_file_path}'
         self.outfile_extension = ".txt"
         self.assets = await get_assets_grouped_by_type(self, args, ASSET_TYPE_SUBDOMAIN)
-        # for every_asset in self.assets:
-        #     if "_id" in every_asset:
-        #         domain = every_asset["_id"]
-        #         for active_hosts in every_asset["active_hosts"][0]:
-        #             outfile = CommonUtils.generate_unique_output_file_name(domain, self.outfile_extension)
-        #             command = self.base_command.format(input_domain = active_hosts, output_file_path = outfile)
-        #             self.commands_list.append((self, command, outfile, domain))
         return super().base_get_commands(self.assets)
 
     def parse_report(self, outfile):
