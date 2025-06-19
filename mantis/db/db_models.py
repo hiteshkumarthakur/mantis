@@ -1,6 +1,11 @@
 from pydantic import BaseModel, Field
 from typing import Literal, Optional, Dict, List
 
+class JSAsset(BaseModel):
+    js_link: str
+    ips: List[str] = Field(default_factory=list)
+    emails: List[str] = Field(default_factory=list)
+    apis: List[str] = Field(default_factory=list)
 
 class Assets(BaseModel):
 
@@ -27,8 +32,10 @@ class Assets(BaseModel):
     stale: Optional[bool] = False
     repositories: Optional[str] = Field(None)
     tool_source: Optional[str] = Field(None)
-    js_assets: Optional[list] = Field(default_factory=list)
+    js_assets: Optional[List[JSAsset]] = Field(default_factory=list)
     others: Optional[dict] = dict()
+
+
 
 
 ## Mandate out the fields which are not compulsorily required for every type of finding. 
