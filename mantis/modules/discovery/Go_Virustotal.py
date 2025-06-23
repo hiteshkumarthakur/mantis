@@ -40,7 +40,7 @@ class Go_Virustotal(ToolScanner):
         super().__init__()
         
     async def get_commands(self, args: ArgsModel):
-        self.VT_API_KEY = None # Provide the VT_API_KEY (Virustotal API key) token here
+        self.VT_API_KEY = "725840fd3d6b95cc12bec4cfe88885f410b97d7deb5d7e5091abf483927c5f9a" # Provide the VT_API_KEY (Virustotal API key) token here
         if self.VT_API_KEY is None:
             logging.warning("VT_API_KEY token not exported, Go_Virustotal will not run successfully")
             raise Exception("VT_API_KEY token not provided!!")

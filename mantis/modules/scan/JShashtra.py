@@ -61,6 +61,10 @@ class JShashtra(ToolScanner):
                     with open(file_path, 'wb') as file:
                         file.write(response.content)
 
+                    GitleaksRunner.process_js(output_dir)
+                    secret_finder = SecretFinder(output_dir,args,'')
+                    await secret_finder.find_secrets_in_js(asset)
+
                     # Read JS content as text
                     try:
                         with open(file_path, "r", encoding="utf-8") as f:
