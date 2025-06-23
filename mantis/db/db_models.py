@@ -28,6 +28,7 @@ class Assets(BaseModel):
     repositories: Optional[str] = Field(None)
     tools_source: Optional[str] = Field(None)
     others: Optional[dict] = dict()
+    content_discovery: Optional[dict] = dict()  # For storing content discovery results
 
 
 ## Mandate out the fields which are not compulsorily required for every type of finding. 
