@@ -48,6 +48,7 @@ class ToolScanner:
         files = {
             "https://raw.githubusercontent.com/trickest/resolvers/main/resolvers.txt": "resolvers.txt", # https://github.com/trickest
             "https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt": "best-dns-wordlist.txt"  # https://www.assetnote.io/
+            "https://wordlists-cdn.assetnote.io/data/automated/httparchive_directories_1m_2024_05_28.txt" # "https://wordlists-cdn.assetnote.io/data/automated/httparchive_directories_1m_2024_05_28.txt"
         }
 
         for url, filename in files.items():

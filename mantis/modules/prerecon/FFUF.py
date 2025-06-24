@@ -14,6 +14,7 @@ class FFUF(ToolScanner):
 
     def __init__(self) -> None:
         super().__init__()
+        super().download_required_file()
 
     def ensure_http_prefix(self, domain):
         if not domain.startswith("http://") and not domain.startswith("https://"):
