@@ -61,9 +61,17 @@ class JShashtra(ToolScanner):
                     with open(file_path, 'wb') as file:
                         file.write(response.content)
 
+                    report_path = os.path.join(output_dir, "report.json")
+                    try:
+                        os.remove(report_path)
+                        logging.info(f"Deleted file: {report_path}")
+                    except Exception as e:
+                        logging.warning(f"Could not delete file {report_path}: {e}")
+
                     GitleaksRunner.process_js(output_dir)
                     secret_finder = SecretFinder(output_dir,args,'')
-                    await secret_finder.find_secrets_in_js(asset)
+                    await secret_finder.find_secrets_in_js(asset,js_asset)
+
 
                     # Read JS content as text
                     try:

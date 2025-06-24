@@ -124,7 +124,7 @@ class SecretFinder:
         logging.info("Findings inserted in db")
         return True
 
-    async def find_secrets_in_js(self,asset):
+    async def find_secrets_in_js(self,asset,js_asset):
         secrets = self.report_data
         if secrets == []:
             return None
@@ -133,8 +133,8 @@ class SecretFinder:
         self.finding_type = "secret"
         for secret in secrets:
             finding_dict = {}
-            finding_dict["host"] = self.args.org
-            finding_dict["url"] = asset
+            finding_dict["host"] = str(asset.get('asset'))
+            finding_dict["url"] = js_asset
             finding_dict["title"] = f"JShastra"
             finding_dict["org"] = self.args.org
             finding_dict["type"] = "secret"
@@ -147,7 +147,7 @@ class SecretFinder:
 
         if len(finding_dict_list):
             # asset = self.extract_hostname(asset)
-            await CrudUtils.insert_findings(self,asset, finding_dict_list, self.finding_type)
+            await CrudUtils.insert_findings(self,str(asset.get('asset')), finding_dict_list, self.finding_type)
         else:
             logging.info('No secrets found')
         logging.info("Findings inserted in db")
