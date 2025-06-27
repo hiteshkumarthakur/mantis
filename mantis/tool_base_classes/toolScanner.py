@@ -46,10 +46,15 @@ class ToolScanner:
 
         # Define URLs and corresponding filenames
         files = {
+            #for subdomain brute forcing and DNS resolution
             "https://raw.githubusercontent.com/trickest/resolvers/main/resolvers.txt": "resolvers.txt", # https://github.com/trickest
-            "https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt": "best-dns-wordlist.txt"  # https://www.assetnote.io/
-            "https://wordlists-cdn.assetnote.io/data/automated/httparchive_directories_1m_2024_05_28.txt" # "https://wordlists-cdn.assetnote.io/data/automated/httparchive_directories_1m_2024_05_28.txt"
+            "https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt": "best-dns-wordlist.txt",  # https://www.assetnote.io/
+                                                                                    
+            #for directory brute forcing and content discovery                                                                       
+            "https://wordlists-cdn.assetnote.io/data/automated/httparchive_directories_1m_2024_05_28.txt" : "httparchive_directories_1m_2024_05_28.txt",# "https://wordlists-cdn.assetnote.io/data/automated/httparchive_directories_1m_2024_05_28.txt"
+            "https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/directory-list-2.3-medium.txt":"raft-large-directories-lowercase.txt"
         }
+
 
         for url, filename in files.items():
             file_path = os.path.join(download_dir, filename)
