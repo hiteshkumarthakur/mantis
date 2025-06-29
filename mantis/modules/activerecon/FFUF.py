@@ -41,7 +41,7 @@ class FFUF(ToolScanner):
 
     async def get_commands(self, args: ArgsModel):
         self.org = args.org
-        self.base_command = "ffuf -u http://{input_domain}/FUZZ -w configs/resources/httparchive_directories_1m_2024_05_28.txt -of json -o {output_file_path} t 50 -mc 200,204,403"
+        self.base_command = "ffuf -u {input_domain}/FUZZ -w configs/resources/httparchive_directories_1m_2024_05_28.txt -of json -o {output_file_path} t 50 -mc 200,204,403"
         self.outfile_extension = ".json"
         self.assets = await get_assets_with_non_empty_fields(self, args, "active_hosts")
         for every_asset in self.assets:
