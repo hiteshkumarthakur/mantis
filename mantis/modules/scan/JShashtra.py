@@ -1,3 +1,4 @@
+import ipaddress
 import logging
 import os
 import re
@@ -82,24 +83,58 @@ class JShashtra(ToolScanner):
                         continue
 
                     # Extract information
-                    async def extract_ip_addresses(js_content):
-                        ip_pattern = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
-                        return list(set(re.findall(ip_pattern, js_content)))
+                    # async def extract_ip_addresses(js_content):
+                    #     ip_pattern = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
+                    #     return list(set(re.findall(ip_pattern, js_content)))
+                    #
+                    # async def extract_emails(js_content):
+                    #     email_pattern = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+'
+                    #     return list(set(re.findall(email_pattern, js_content)))
 
-                    async def extract_emails(js_content):
-                        email_pattern = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+'
-                        return list(set(re.findall(email_pattern, js_content)))
+                    async def extract_ip_addresses(js_content: str):
+                        # Match IPv4 and IPv6 (basic pattern)
+                        ip_pattern = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b|\b(?:[A-Fa-f0-9]{0,4}:){2,7}[A-Fa-f0-9]{0,4}\b'
+                        raw_matches = re.findall(ip_pattern, js_content)
+
+                        # Validate IPs to exclude false positives (e.g. 999.999.999.999)
+                        valid_ips = set()
+                        for ip in raw_matches:
+                            try:
+                                ipaddress.ip_address(ip)
+                                valid_ips.add(ip)
+                            except ValueError:
+                                continue
+
+                        return list(valid_ips)
+
+                    async def extract_emails(js_content: str):
+                        # Enhanced email pattern: includes subdomains, TLDs, dots in names
+                        email_pattern = r'\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,24}\b'
+                        matches = set(re.findall(email_pattern, js_content))
+
+                        # Optional: Filter out obvious fake/bogus domains
+                        common_bogus_domains = {'example.com', 'test.com', 'localhost', 'invalid'}
+                        filtered = [email for email in matches if
+                                    email.split('@')[-1].lower() not in common_bogus_domains]
+
+                        return filtered
 
                     async def extract_api_paths(js_content):
-                        full_url_pattern = r'https?://[^\s"\'<>]*?(?:/api|/v\d+|/auth|/login|/register|/data|/user|/admin|/token|/search|/update|/get|/post|/put|/delete)[^\s"\'<>]*'
-                        relative_path_pattern = r'(?<![a-zA-Z0-9])/(?:api|v\d+|rest)(?:/[^\s"\'<>]*)?'
-                        rootless_path_pattern = r'(?<![a-zA-Z0-9/])(?:api|v\d+|rest)/(?:[^\s"\'<>]*)'
+                        # full_url_pattern = r'https?://[^\s"\'<>]*?(?:/api|/v\d+|/auth|/login|/register|/data|/user|/admin|/token|/search|/update|/get|/post|/put|/delete)[^\s"\'<>]*'
+                        # relative_path_pattern = r'(?<![a-zA-Z0-9])/(?:api|v\d+|rest)(?:/[^\s"\'<>]*)?'
+                        # rootless_path_pattern = r'(?<![a-zA-Z0-9/])(?:api|v\d+|rest)/(?:[^\s"\'<>]*)'
+
+                        full_url_pattern = r'https?://[^\s"\'<>]*?(?:/(?:api|v\d{1,2}|auth|login|logout|register|signup|signin|session|data|user|account|admin|dashboard|token|search|update|get|post|put|delete|upload|download|status|config|settings|profile|info|details|reset|verify|confirm|email|mobile|otp|2fa|file|feed|news|comment|message|notify|notification|report|activity|metrics|stat|log|debug|error|trace))[^"\'<>\s]*'
+                        relative_path_pattern = r'(?<![a-zA-Z0-9])/(?:api|v\d{1,2}|rest|auth|admin|user|account|token|data|config|search|session|settings|status|metrics)(?:/[^\s"\'<>]*)?'
+                        rootless_path_pattern = r'(?<![a-zA-Z0-9/])(?:api|v\d{1,2}|rest|auth|admin|user|account|token|session|status|config|report|search)/(?:[^\s"\'<>]*)'
+                        endpoint_like_pattern = r'(?:["\'\s(=]|^)(\/?(?:api|v\d{1,2}|auth|user|admin|account|data|config|token|search|report|session|status|settings|upload|download|reset|verify|email|otp|2fa|dashboard)(?:\/[a-zA-Z0-9_\-\.]+){1,5})(?:["\'\s),;]|$)'
 
                         full_urls = re.findall(full_url_pattern, js_content)
                         relative_paths = re.findall(relative_path_pattern, js_content)
                         rootless_paths = re.findall(rootless_path_pattern, js_content)
+                        endpoint_like_pattern = re.findall(endpoint_like_pattern, js_content)
 
-                        return list(set(full_urls + relative_paths + rootless_paths))
+                        return list(set(full_urls + relative_paths + rootless_paths + endpoint_like_pattern))
 
                     async def process_js_file(js_asset, js_content, current_asset, asset):
                         ips = await extract_ip_addresses(js_content)

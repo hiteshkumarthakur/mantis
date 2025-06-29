@@ -17,8 +17,25 @@ class Gau_JS(ToolScanner):
         self.org = args.org
         self.base_command = "gau {input_domain} --fc 404 --threads 5 | grep '.js$' > {output_file_path}"
         self.outfile_extension = ".txt"
-        self.assets = await get_assets_grouped_by_type(self, args, ASSET_TYPE_SUBDOMAIN)
-        return super().base_get_commands(self.assets)
+        self.assets = await get_assets_with_non_empty_fields(self, args, "active_hosts")
+        for every_asset in self.assets:
+            if "_id" in every_asset:
+                domain = every_asset["_id"]
+                # Filter out hosts ending with :443, keep all others
+                filtered_hosts = [
+                    host for host in every_asset["active_hosts"][0]
+                    if not host.endswith(":443")
+                ]
+                for active_host in filtered_hosts:
+                    outfile = CommonUtils.generate_unique_output_file_name(domain, self.outfile_extension)
+                    command = self.base_command.format(input_domain=active_host, output_file_path=outfile)
+                    self.commands_list.append((self, command, outfile, domain))
+            else:
+                outfile = CommonUtils.generate_unique_output_file_name(every_asset, self.outfile_extension)
+                command = self.base_command.format(input_domain=every_asset, output_file_path=outfile)
+                self.commands_list.append((self, command, outfile, every_asset))
+
+        return self.commands_list
 
     def parse_report(self, outfile):
         tool_output_dict = {}
