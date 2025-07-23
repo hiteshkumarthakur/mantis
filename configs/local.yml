@@ -23,7 +23,7 @@ workflow:
         tools: ['HTTPX_Active', 'HTTPX']
         order: 3
       - moduleName: activerecon
-        tools: ['Wafw00f']
+        tools: ['Wafw00f','FFUF']
         order: 4
       - moduleName: scan
         tools: [ 'DNSTwister', 'Nuclei', 'Corsy']
