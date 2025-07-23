@@ -15,8 +15,8 @@ class FFUF(ToolScanner):
 
     def __init__(self) -> None:
         super().__init__()
-        # super().download_required_file()
-        wordlist1 = "configs/resources/httparchive_directories_1m_2024_05_28.txt"
+        super().download_required_file()
+        wordlist = "configs/resources/ffuf-wordlist.txt"
         # wordlist2 = "configs/resources/raft-large-directories-lowercase.txt"
         # combined_wordlist = "configs/resources/combined_wordlist.txt"
 
@@ -41,7 +41,8 @@ class FFUF(ToolScanner):
 
     async def get_commands(self, args: ArgsModel):
         self.org = args.org
-        self.base_command = "ffuf -u {input_domain}/FUZZ -w configs/resources/httparchive_directories_1m_2024_05_28.txt -of json -o {output_file_path} t 50 -mc 200,204,403"
+        # self.base_command = "ffuf -u {input_domain}/FUZZ -w configs/resources/ffuf-wordlist.txt -of json -o {output_file_path} -recursion -ac"
+        self.base_command = "ffuf -u {input_domain}/FUZZ -w configs/resources/ffuf-wordlist.txt -of json -o {output_file_path} -ac"
         self.outfile_extension = ".json"
         self.assets = await get_assets_with_non_empty_fields(self, args, "active_hosts")
         for every_asset in self.assets:
