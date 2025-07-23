@@ -48,10 +48,10 @@ class FFUF(ToolScanner):
         for every_asset in self.assets:
             if "_id" in every_asset:
                 domain = every_asset["_id"]
-                # Filter out hosts ending with :443, keep all others
+                # Filter out hosts
                 filtered_hosts = [
                     host for host in every_asset["active_hosts"][0]
-                    if not host.endswith(":443")
+                    if not host.endswith(":80")
                 ]
                 for active_host in filtered_hosts:
                     outfile = CommonUtils.generate_unique_output_file_name(domain, self.outfile_extension)
