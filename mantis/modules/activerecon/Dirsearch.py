@@ -11,7 +11,7 @@ import logging
 class Dirsearch(ToolScanner):
     def __init__(self) -> None:
         super().__init__()
-        # super().download_required_file()
+        super().download_required_file()
         self.wordlist = "configs/resources/common.txt"
 
     async def get_commands(self, args: ArgsModel):
