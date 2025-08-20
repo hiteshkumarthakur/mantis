@@ -23,7 +23,7 @@ workflow:
         tools: ['HTTPX_Active', 'HTTPX']
         order: 3
       - moduleName: activerecon
-        tools: ['Wafw00f']
+        tools: ['Wafw00f','Dirsearch']
         order: 4
       - moduleName: scan
         tools: [ 'DNSTwister', 'Nuclei', 'Corsy']
@@ -31,7 +31,6 @@ workflow:
       - moduleName: secretscanner
         tools: ['SecretScanner','GithubScanner']
         order: 6
-
 
 # This workflow is for product security teams. It includes tools like dns and Ipinfo. Please provide the key for IPinfo     
   - workflowName: 'productsecurity'
@@ -130,7 +129,7 @@ notify:
 
 
 dbConfig:
-  mongoConnectionString: 'mongodb://mantis.db:27017'
+  mongoConnectionString: 'mongodb://127.0.0.1:27017'
 
 secretscanner:
   # org       : This will perform scan at the org level (https://api.github.com/orgs/{org}/repos?page=)

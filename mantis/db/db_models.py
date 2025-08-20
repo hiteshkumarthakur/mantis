@@ -27,6 +27,7 @@ class Assets(BaseModel):
     stale: Optional[bool] = False
     repositories: Optional[str] = Field(None)
     tool_source: Optional[str] = Field(None)
+    content_discovery: Optional[dict] = dict()  # URLs discovered by tools like dirsearch, ffuf, etc.
     others: Optional[dict] = dict()
 
 

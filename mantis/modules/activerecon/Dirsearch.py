@@ -3,7 +3,7 @@ from mantis.utils.common_utils import CommonUtils
 from mantis.utils.crud_utils import CrudUtils
 from mantis.tool_base_classes.toolScanner import ToolScanner
 from mantis.models.args_model import ArgsModel
-from mantis.utils.tool_utils import get_assets_with_non_empty_fields
+from mantis.utils.tool_utils import get_assets_grouped_by_type, get_assets_with_non_empty_fields
 import json
 import os
 import logging
@@ -16,8 +16,8 @@ class Dirsearch(ToolScanner):
 
     async def get_commands(self, args: ArgsModel):
         self.org = args.org
-        self.base_command = self.base_command = (
-            "python3 configs/packages/dirsearch-0.4.3/dirsearch.py "
+        self.base_command = (
+            "dirsearch "
             "-u {input_domain} -w {wordlist} "
             "-e conf,config,bak,backup,swp,old,db,aspx~,asp~,py,py~,rb,rb~,php~,bak,bkp,cache,"
             "cgi,conf,csv,html,inc,jar,jsp,jsp~,log,rar,old,sql.gz,sql.zip,sql.tar.gz,sql~,swp,"
@@ -27,6 +27,7 @@ class Dirsearch(ToolScanner):
         )
         self.outfile_extension = ".json"
         self.assets = await get_assets_with_non_empty_fields(self, args, "active_hosts")
+        # self.assets = await get_assets_grouped_by_type(self, args, ASSET_TYPE_SUBDOMAIN)
 
         for every_asset in self.assets:
             if "_id" in every_asset:
