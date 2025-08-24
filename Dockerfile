@@ -107,6 +107,13 @@ RUN tar -xzf puredns_2.1.1_linux_amd64.tar.gz
 RUN mv puredns /usr/bin/puredns
 RUN rm -rf puredns_2.1.1_linux_amd64.tar.gz
 
+# Install FFUF
+RUN echo "Installing FFUF"
+RUN go install github.com/ffuf/ffuf/v2@v2.1.0
+ENV PATH="/root/go/bin:$PATH"
+RUN echo 'export PATH=$PATH:/root/go/bin' | tee -a ~/.bashrc
+
+
 # Install Poetry
 RUN pip install poetry==1.4.2
 
