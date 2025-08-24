@@ -29,6 +29,7 @@ class Assets(BaseModel):
     tool_source: Optional[str] = Field(None)
     content_discovery: Optional[dict] = dict()  # URLs discovered by tools like dirsearch, ffuf, etc.
     others: Optional[dict] = dict()
+    content_discovery: Optional[dict] = dict()  # For storing content discovery results
 
 
 ## Mandate out the fields which are not compulsorily required for every type of finding. 

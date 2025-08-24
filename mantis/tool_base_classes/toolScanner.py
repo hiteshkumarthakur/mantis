@@ -51,7 +51,10 @@ class ToolScanner:
             "https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt": "best-dns-wordlist.txt",  # https://www.assetnote.io/
 
             # for dirsearch
-            "https://raw.githubusercontent.com/danielmiessler/SecLists/refs/heads/master/Discovery/Web-Content/common.txt":"common.txt"
+            "https://raw.githubusercontent.com/danielmiessler/SecLists/refs/heads/master/Discovery/Web-Content/common.txt":"common.txt",
+
+            #for FFUF
+            "https://raw.githubusercontent.com/danielmiessler/SecLists/refs/heads/master/Discovery/Web-Content/raft-medium-directories.txt":"raft-medium-directories.txt"
         }
 
         for url, filename in files.items():
