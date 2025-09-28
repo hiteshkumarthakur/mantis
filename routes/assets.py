@@ -268,7 +268,34 @@ async def search(
                             "else": {"$concat": ["$$value", ", ", {"$toLower": "$$this"}]}
                         }
                     }
-                }}
+                }},
+                "Content": {
+                    "$cond": {
+                        "if": {"$eq": [{"$type": "$content_discovery"}, "object"]},
+                        "then": {
+                            "$reduce": {
+                                "input": {"$objectToArray": "$content_discovery"},
+                                "initialValue": "",
+                                "in": {
+                                    "$concat": [
+                                        "$$value",
+                                        {"$cond": {
+                                            "if": {"$eq": ["$$value", ""]},
+                                            "then": "",
+                                            "else": "\n"
+                                        }},
+                                        "$$this.k",
+                                        " (",
+                                        {"$toString": "$$this.v"},
+                                        ")"
+                                    ]
+                                }
+                            }
+                        },
+                        "else": "No data"
+                    }
+                },
+                "JSAssets": "$js_assets",
             }
         },
         {"$skip": (page - 1) * page_size},
@@ -349,7 +376,21 @@ async def vulnerability_download_csv(current_user: Annotated[User, Security(get_
                             "else": {"$concat": ["$$value", ", ", {"$toLower": "$$this"}]}
                         }
                     }
-                }}
+                }},
+                "content_discovery": "$content_discovery",
+                "JS Assets": {
+                    "$reduce": {
+                        "input": "$js_assets",
+                        "initialValue": "",
+                        "in": {
+                            "$cond": {
+                                "if": {"$eq": [{"$indexOfArray": ["$js_assets", "$$this"]}, 0]},
+                                "then": {"$concat": ["$$value", "$$this"]},
+                                "else": {"$concat": ["$$value", ", ", "$$this"]}
+                            }
+                        }
+                    }
+                }
             }
         }
     ]

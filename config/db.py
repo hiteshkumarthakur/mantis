@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 
 # MongoDB connection URI
-MONGO_URI = "mongodb://10.10.0.3:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.1"
+MONGO_URI = "mongodb://localhost:27017/"
 DATABASE_NAME = "mantis"
 
 # Create a MongoClient instance
